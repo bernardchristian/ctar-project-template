@@ -1,4 +1,4 @@
-# rct-project-template
+# ctar-project-template
 
 This repository is the **R version of a barebones project template**. It is meant to be small enough to understand quickly, but structured enough to grow into a real project.
 
@@ -30,7 +30,7 @@ If you later look at `trr266/treat`, you will see the same broad movement in a r
 .devcontainer/
 README.md
 Makefile
-rct-project-template.Rproj
+ctar-project-template.Rproj
 code/R/pull_data.R
 code/R/prep_data.R
 code/R/run_analysis.R
