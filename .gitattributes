@@ -1,0 +1,11 @@
+# Keep Linux line endings (LF) in all text files, also on Windows.
+# The project runs inside a Linux container, where Windows line endings (CRLF)
+# can break shell commands and credential files.
+* text=auto eol=lf
+
+# Binary files
+*.pdf binary
+*.png binary
+*.jpg binary
+*.rds binary
+*.parquet binary

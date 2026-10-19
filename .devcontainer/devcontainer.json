@@ -1,5 +1,5 @@
 {
-  "name": "rct-project-template",
+  "name": "ctar-project-template",
   "build": { "dockerfile": "Dockerfile" },
   "overrideCommand": false,
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",

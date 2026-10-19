@@ -24,7 +24,12 @@ RUN apt-get update \
       libxml2-dev \
  && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
+# DBI, dplyr and duckdb are not used by the mtcars example. They are
+# pre-installed for pulling data from WRDS via DuckDB.
 RUN install2.r --error --skipinstalled \
+      DBI \
+      dplyr \
+      duckdb \
       ggplot2 \
       knitr \
       rmarkdown \
@@ -33,6 +38,32 @@ RUN install2.r --error --skipinstalled \
 
 RUN Rscript -e "tinytex::install_tinytex(dir = '/opt/TinyTeX', force = TRUE)" \
  && ln -sf /opt/TinyTeX/bin/*/* /usr/local/bin/
+
+# Pre-install LaTeX packages needed by the paper and presentation
+RUN tlmgr option repository https://ftp.fau.de/ctan/systems/texlive/tlnet \
+ && tlmgr update --self \
+ && tlmgr install \
+      adjustbox \
+      beamer \
+      booktabs \
+      caption \
+      csquotes \
+      endfloat \
+      footmisc \
+      geometry \
+      latexmk \
+      setspace \
+      threeparttable \
+ && test -n "$(kpsewhich adjustbox.sty)" \
+ && test -n "$(kpsewhich beamer.cls)" \
+ && test -n "$(kpsewhich booktabs.sty)" \
+ && test -n "$(kpsewhich caption.sty)" \
+ && test -n "$(kpsewhich csquotes.sty)" \
+ && test -n "$(kpsewhich endfloat.sty)" \
+ && test -n "$(kpsewhich footmisc.sty)" \
+ && test -n "$(kpsewhich geometry.sty)" \
+ && test -n "$(kpsewhich setspace.sty)" \
+ && test -n "$(kpsewhich threeparttable.sty)"
 
 RUN set -eux; \
   QUARTO_VERSION=1.6.40; \
@@ -47,6 +78,9 @@ RUN set -eux; \
   dpkg -i /tmp/quarto.deb; \
   rm /tmp/quarto.deb
 
+RUN echo "rstudio ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/rstudio \
+ && chmod 0440 /etc/sudoers.d/rstudio
+
 RUN mkdir -p /workspaces \
  && chown -R rstudio:rstudio /home/rstudio /opt/TinyTeX /workspaces
 
@@ -56,7 +90,7 @@ WORKDIR /workspaces
 **devcontainer.json:**
 ```
 {
-  "name": "rct-project-template",
+  "name": "ctar-project-template",
   "build": { "dockerfile": "Dockerfile" },
   "overrideCommand": false,
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
@@ -76,7 +110,7 @@ WORKDIR /workspaces
     "memory": "4gb",
     "storage": "16gb"
   },
-  "postCreateCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}",
+  "postCreateCommand": "sudo chown -R rstudio:rstudio ${containerWorkspaceFolder} && git config --global --add safe.directory ${containerWorkspaceFolder}",
   "customizations": {
     "vscode": {
       "extensions": [

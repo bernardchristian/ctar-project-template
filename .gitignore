@@ -2,6 +2,9 @@
 .DS_Store
 *.log
 
+# Credentials (copy _secrets.env to secrets.env)
+secrets.env
+
 # Generated data and output
 data/pulled/
 data/generated/

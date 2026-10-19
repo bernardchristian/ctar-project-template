@@ -87,4 +87,4 @@ scatter_figure
 
 - The template keeps all moving parts visible while staying small enough to understand in one sitting
 - Replace the toy `mtcars` data with your own; the workflow shape stays the same
-- The paper and this presentation both read from `output/rct-project-template-results.rds` — run the pipeline once, render both outputs
+- The paper and this presentation both read from `output/results.rds` — run the pipeline once, render both outputs

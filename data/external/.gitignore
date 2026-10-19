@@ -1,2 +1,3 @@
-*
-!.gitignore
+# Files in data/external are committed to the repository.
+# This file only keeps the empty folder in Git.
+# If you store licensed data here (e.g., a manual WRDS download), keep your repository private.
