@@ -75,7 +75,7 @@ The `data/` folder keeps the same conceptual separation used in `treat`:
 
 In this template, the pull step uses the built-in `mtcars` dataset, so `data/external/` starts empty. The folder is still there so you can swap in your own real project data later without changing the overall structure.
 
-`data/pulled/`, `data/generated/`, and `output/` are listed in `.gitignore`. Everything in them can be recreated by running the workflow. If your project uses licensed data (for example from WRDS), keep your repository private.
+`data/pulled/` and `data/generated/` are listed in `.gitignore`, and so is everything in `output/` except the rendered PDFs. All of it can be recreated by running the workflow. If your project uses licensed data (for example from WRDS), keep your repository private.
 
 ## References
 
@@ -246,6 +246,8 @@ The final paper and slides are written to:
 - `output/presentation.pdf`
 
 That paper imports one saved descriptive table and one saved figure from the results bundle. The analytical objects are prepared first, then rendered in the paper.
+
+The two PDFs are committed to the repository, so commit and push them after each `make` run that changes them. This is how your final paper and slides are submitted. Everything else in `output/`, including `results.rds`, stays local.
 
 ## The Paper
 

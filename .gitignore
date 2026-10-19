@@ -5,10 +5,14 @@
 # Credentials (copy _secrets.env to secrets.env)
 secrets.env
 
-# Generated data and output
+# Generated data
 data/pulled/
 data/generated/
-output/
+
+# Output: the rendered PDFs are committed, everything else stays local
+# (results bundles such as results.rds can contain the underlying data)
+output/*
+!output/*.pdf
 
 # R / Quarto
 .Rproj.user
