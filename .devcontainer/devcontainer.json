@@ -1,15 +1,14 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the
-// README at: https://github.com/rocker-org/devcontainer-templates/tree/main/src/r-ver
+// For format details, see https://aka.ms/devcontainer.json.
 {
-    "name": "rct-project-template",
+    "name": "ctar-project-template",
     "build": {
         "dockerfile": "Dockerfile"
     },
     "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
     "hostRequirements": {
-        "cpus": 4,
-        "memory": "16gb",
-        "storage": "32gb"
+        "cpus": 2,
+        "memory": "4gb",
+        "storage": "16gb"
     },
     // mask host .venv with an anonymous volume inside the workspace (compose style)
     "mounts": [

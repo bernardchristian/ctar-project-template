@@ -2,10 +2,17 @@
 .DS_Store
 *.log
 
-# Generated data and output
+# Credentials (copy _secrets.env to secrets.env)
+secrets.env
+
+# Generated data
 data/pulled/
 data/generated/
-output/
+
+# Output: the rendered PDFs are committed, everything else stays local
+# (results bundles such as results.pkl can contain the underlying data)
+output/*
+!output/*.pdf
 
 # Python
 .venv/
@@ -17,8 +24,3 @@ __pycache__/
 .quarto
 /.vscode
 /.quarto/
-
-
-
-# output folder
-output/

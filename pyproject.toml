@@ -1,10 +1,11 @@
 [project]
-name = "rct-project-template"
+name = "ctar-project-template"
 version = "0.1.0"
 description = "A barebones Python template for reproducible project workflows."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "duckdb>=1.1,<2",
     "jupyter>=1.0,<2",
     "pandas>=2.2,<3",
     "plotnine>=0.13,<1",
