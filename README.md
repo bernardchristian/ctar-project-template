@@ -100,7 +100,7 @@ readRenviron("secrets.env")
 Sys.getenv("WRDS_USERNAME")
 ```
 
-The `mtcars` example does not need credentials. The container already includes the `DBI`, `dplyr` and `duckdb` packages, which you need to pull data from WRDS via DuckDB.
+The `mtcars` example does not need credentials. The container already includes the `DBI`, `dplyr` and `duckdb` packages, which you need to pull data from WRDS via DuckDB, and `fixest` for fixed-effects regressions.
 
 ## Recommended Setup Paths
 
@@ -280,7 +280,7 @@ All container paths (Codespaces, VS Code Dev Containers, and local Docker) provi
 - `make`
 - Quarto
 - TinyTeX
-- the R packages needed for this template, plus `DBI`, `dplyr` and `duckdb` for pulling data from WRDS
+- the R packages needed for this template, plus `DBI`, `dplyr` and `duckdb` for pulling data from WRDS and `fixest` for fixed-effects regressions
 
 This keeps the working environment consistent across students.
 

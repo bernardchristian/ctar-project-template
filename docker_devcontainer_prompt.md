@@ -24,12 +24,14 @@ RUN apt-get update \
       libxml2-dev \
  && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
-# DBI, dplyr and duckdb are not used by the mtcars example. They are
-# pre-installed for pulling data from WRDS via DuckDB.
+# DBI, dplyr, duckdb and fixest are not used by the mtcars example. They are
+# pre-installed for pulling data from WRDS via DuckDB and for fixed-effects
+# regressions.
 RUN install2.r --error --skipinstalled \
       DBI \
       dplyr \
       duckdb \
+      fixest \
       ggplot2 \
       knitr \
       rmarkdown \
