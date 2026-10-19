@@ -58,8 +58,9 @@ highlights <- list(
   heaviest_model = analysis_data$model[which.max(analysis_data$wt)],
   interpretation = paste(
     "The prepared sample suggests a clear negative relationship between vehicle",
-    "weight and fuel efficiency, while the manual cars in this small dataset",
-    "have somewhat higher fuel efficiency after controlling for weight."
+    "weight and fuel efficiency. Manual cars are more fuel efficient on average,",
+    "but mainly because they are lighter: after controlling for weight, transmission",
+    "type is associated with almost no difference in fuel efficiency."
   )
 )
 
