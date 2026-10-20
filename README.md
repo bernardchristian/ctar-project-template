@@ -109,7 +109,7 @@ secrets = dict(
 secrets["WRDS_USERNAME"]
 ```
 
-The `mtcars` example does not need credentials. The project environment already includes the `duckdb` package, which you need to pull data from WRDS via DuckDB, and `pyfixest` for fixed-effects regressions.
+The `mtcars` example does not need credentials. To pull data from WRDS via DuckDB, your project needs additional Python packages, for example `duckdb` (see "Adding Python Packages" below).
 
 ## Recommended Setup Paths
 
@@ -249,7 +249,17 @@ Both container paths (Codespaces and VS Code Dev Containers) provide:
 - Quarto
 - TinyTeX with the LaTeX packages needed by the paper and the slides
 
-In both container paths, `uv` downloads and manages the Python interpreter pinned for the project and installs the packages listed in `pyproject.toml` and `uv.lock`, including `duckdb` for pulling data from WRDS and `pyfixest` for fixed-effects regressions. This keeps the working environment consistent across students without baking the project Python version into the base image.
+In both container paths, `uv` downloads and manages the Python interpreter pinned for the project and installs the packages listed in `pyproject.toml` and `uv.lock`. This keeps the working environment consistent across students without baking the project Python version into the base image.
+
+## Adding Python Packages
+
+The project environment only includes the packages of the `mtcars` example. When your project needs more, add them with `uv`, in the terminal from the repository root, for example:
+
+```bash
+uv add duckdb pyfixest
+```
+
+`uv add` installs the packages right away (no container rebuild needed) and records them in `pyproject.toml` and `uv.lock`. Commit both files, so that your workflow runs on every computer and not just on yours. With a fully local installation, the same command works.
 
 If Quarto reports a missing LaTeX package when you render your own paper, install that package on demand with `tlmgr install <package>`, and add it to the `tlmgr install` list in `.devcontainer/Dockerfile` so that it is there after the next rebuild.
 
