@@ -71,7 +71,7 @@ The `data/` folder keeps the same conceptual separation used in `treat`:
 
 In this template, the pull step uses the `mtcars` dataset that ships with `plotnine`, so `data/external/` starts empty. The folder is still there so you can swap in your own real project data later without changing the overall structure.
 
-`data/pulled/`, `data/generated/`, and everything in `output/` except the rendered PDFs are listed in `.gitignore`, because they can be recreated by running the workflow. If you pull licensed data, for example from WRDS, keep your credentials out of your code: copy `_secrets.env` to `secrets.env` and add your credentials there. `secrets.env` is never committed.
+`data/pulled/`, `data/generated/`, and `output/` are listed in `.gitignore`, because everything in them can be recreated by running the workflow. If you pull licensed data, for example from WRDS, keep your credentials out of your code: copy `_secrets.env` to `secrets.env` and add your credentials there. `secrets.env` is never committed.
 
 ## References
 
@@ -164,7 +164,7 @@ The final paper and slides are written to:
 - `output/paper.pdf`
 - `output/presentation.pdf`
 
-The two PDFs are committed to the repository: commit and push them after each `make` run that changes them.
+Like everything in `output/`, the PDFs are not committed: anyone can recreate them with `make`. For the assignment, upload your `output/paper.pdf` to Moodle.
 
 ## The Paper
 
