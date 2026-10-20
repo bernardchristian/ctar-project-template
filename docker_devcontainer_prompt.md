@@ -24,18 +24,8 @@ RUN apt-get update \
       libxml2-dev \
  && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
-# DBI, dplyr, duckdb and fixest are not used by the mtcars example. They are
-# pre-installed for pulling data from WRDS via DuckDB and for fixed-effects
-# regressions.
-RUN install2.r --error --skipinstalled \
-      DBI \
-      dplyr \
-      duckdb \
-      fixest \
-      ggplot2 \
-      knitr \
-      rmarkdown \
-      tinytex \
+# tinytex installs LaTeX in the next step
+RUN install2.r --error --skipinstalled tinytex \
  && rm -rf /tmp/downloaded_packages
 
 RUN Rscript -e "tinytex::install_tinytex(dir = '/opt/TinyTeX', force = TRUE)" \
@@ -85,6 +75,17 @@ RUN echo "rstudio ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/rstudio \
 
 RUN mkdir -p /workspaces \
  && chown -R rstudio:rstudio /home/rstudio /opt/TinyTeX /workspaces
+
+# --- R packages of the project -------------------------------------------------
+# This list holds the packages of the mtcars example. Add each package your
+# project needs as a new line, written like the lines below: the package name
+# followed by " \". Then run "Dev Containers: Rebuild Container". Because this
+# is the last step, a rebuild only reinstalls these packages (a minute or two).
+RUN install2.r --error --skipinstalled \
+      ggplot2 \
+      knitr \
+      rmarkdown \
+ && rm -rf /tmp/downloaded_packages
 
 WORKDIR /workspaces
 ```

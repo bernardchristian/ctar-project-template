@@ -100,7 +100,7 @@ readRenviron("secrets.env")
 Sys.getenv("WRDS_USERNAME")
 ```
 
-The `mtcars` example does not need credentials. The container already includes the `DBI`, `dplyr` and `duckdb` packages, which you need to pull data from WRDS via DuckDB, and `fixest` for fixed-effects regressions.
+The `mtcars` example does not need credentials. To pull data from WRDS via DuckDB, your project needs additional R packages, for example `DBI` and `duckdb` (see "Adding R Packages" below).
 
 ## Recommended Setup Paths
 
@@ -280,9 +280,31 @@ All container paths (Codespaces, VS Code Dev Containers, and local Docker) provi
 - `make`
 - Quarto
 - TinyTeX
-- the R packages needed for this template, plus `DBI`, `dplyr` and `duckdb` for pulling data from WRDS and `fixest` for fixed-effects regressions
+- the R packages needed for the `mtcars` example (`ggplot2`, `knitr`, `rmarkdown`)
 
 This keeps the working environment consistent across students.
+
+## Adding R Packages
+
+The container only includes the packages of the `mtcars` example. When your project needs more, add them to the container definition, so that your workflow runs on every computer and not just on yours:
+
+1. Open `.devcontainer/Dockerfile` and scroll to the block `R packages of the project` at the end.
+2. Add each package as a new line, written like the existing lines, for example:
+
+   ```dockerfile
+   RUN install2.r --error --skipinstalled \
+         ggplot2 \
+         knitr \
+         rmarkdown \
+         DBI \
+         duckdb \
+    && rm -rf /tmp/downloaded_packages
+   ```
+
+3. Run `Dev Containers: Rebuild Container` (in Codespaces: `Codespaces: Rebuild Container`). Because the package block is the last step of the `Dockerfile`, the rebuild only reinstalls the packages and takes a minute or two.
+4. Commit the changed `Dockerfile`.
+
+With a fully local installation, install the same packages with `install.packages()` and still list them in the `Dockerfile`: it documents the environment your workflow needs.
 
 The `.gitattributes` file keeps Linux line endings in all text files, also when you clone the repository on Windows. This avoids errors when the files are used inside the Linux container.
 
