@@ -1,71 +1,207 @@
 # ctar-project-template
 
-This repository is the **R version of a barebones project template** for Current Topics in Accounting Research (CTAR). It is small enough to understand quickly, but structured like a real empirical project. The example uses the built-in `mtcars` dataset; you replace it with your own data and analysis.
+This repository is the **R version of a barebones project template** for Current Topics in Accounting Research (CTAR). It is meant to be small enough to understand quickly, but structured enough to grow into a real project. A Python version lives on the branch `python`.
 
-A Python version of the template lives on the branch `python`.
+The main idea is simple:
 
-## How the Workflow Moves
+- data are pulled into `data/pulled/`
+- data are prepared into `data/generated/`
+- analysis writes a serialized results bundle to `output/`
+- the paper and the slides in `doc/` read those saved results
 
-| Step | Script | Writes |
-|---|---|---|
-| 1. Pull the data | `code/R/pull_data.R` | `data/pulled/` |
-| 2. Prepare the data | `code/R/prep_data.R` | `data/generated/` |
-| 3. Run the analysis | `code/R/run_analysis.R` | `output/results.rds` |
-| 4. Write the paper and slides | `doc/paper.qmd`, `doc/presentation.qmd` | `output/paper.pdf`, `output/presentation.pdf` |
+So even though the example uses the tiny `mtcars` dataset, the workflow is already organized like a real empirical project.
 
-The paper and the slides do not rerun the analysis: they read the saved results in `output/results.rds`. The `Makefile` runs all steps in order and only reruns the steps whose inputs changed:
+## What You Are Looking At
 
-```bash
-make        # run the whole workflow
-make clean  # delete all generated data and outputs
-```
+This repository gives you a minimal project skeleton with four visible stages:
+
+1. `code/R/pull_data.R`
+2. `code/R/prep_data.R`
+3. `code/R/run_analysis.R`
+4. `doc/paper.qmd` (and `doc/presentation.qmd`)
+
+The point is not the `mtcars` analysis itself. The point is to give you a clean starting structure that you can keep extending for your own work.
+
+If you later look at `trr266/treat`, you will see the same broad movement in a richer and more elaborate form.
 
 ## Project Structure
 
 ```text
-.devcontainer/    the container: R, packages, Quarto, LaTeX (Dockerfile, devcontainer.json)
-code/R/           the three R scripts
-data/external/    data you add by hand (e.g., a manual download)
-data/pulled/      raw data written by pull_data.R (not committed)
-data/generated/   prepared data written by prep_data.R (not committed)
-doc/              paper.qmd, presentation.qmd, references.bib
-output/           results and the rendered PDFs (only the PDFs are committed)
-Makefile          runs the workflow
-_secrets.env      template for your credentials file
+.devcontainer/
+  Dockerfile
+  devcontainer.json
+Makefile
+README.md
+_secrets.env
+ctar-project-template.Rproj
+code/R/pull_data.R
+code/R/prep_data.R
+code/R/run_analysis.R
+data/
+  external/
+  pulled/
+  generated/
+  data_readme.md
+doc/
+  paper.qmd
+  presentation.qmd
+  references.bib
+output/
 ```
 
-## Getting Started
+## How The Workflow Moves
 
-1. Click **Use this template** → **Create a new repository** and make it **Private**. To work in Python, switch on **Include all branches**.
-2. Open your repository in one of three ways:
-   - **Dev Container (recommended).** Install [VS Code](https://code.visualstudio.com/), [Git](https://git-scm.com/), [Docker Desktop](https://www.docker.com/products/docker-desktop/), and the VS Code extension **Dev Containers**. Clone your repository in VS Code (`Ctrl+Shift+P` → **Git: Clone**) and run **Dev Containers: Reopen in Container**. The first build takes 10 to 20 minutes.
-   - **GitHub Codespaces (easiest, nothing to install).** On your repository page, click **Code** → **Codespaces** → **Create codespace on main**. Free hours are limited, so stop your codespace when you are done (**Code** → **Codespaces** → **...** → **Stop codespace**).
-   - **Local installation (not recommended).** Install R, Quarto, TinyTeX, `make`, and the R packages listed at the end of `.devcontainer/Dockerfile` yourself.
-3. Open a terminal (**Terminal** → **New Terminal**) and run `make`. The PDFs appear in `output/`.
+The workflow is intentionally explicit:
 
-In the container, you can also work in RStudio: open the forwarded port `8787` in the **Ports** tab, log in with `rstudio` / `rstudio`, and open `ctar-project-template.Rproj` via **File** → **Open Project**.
+1. `pull_data.R` creates a raw object in `data/pulled/`
+2. `prep_data.R` reads that raw object and creates a prepared analysis dataset in `data/generated/`
+3. `run_analysis.R` reads the prepared dataset and writes a serialized `.rds` results bundle to `output/`
+4. `doc/paper.qmd` and `doc/presentation.qmd` read that `.rds` bundle and render the paper and the slides
 
-## Adding R Packages
+The paper does **not** rerun the full analysis pipeline internally. It consumes prepared results from `output/`.
 
-The container only includes the packages of the `mtcars` example. Add the packages your project needs to the block *R packages of the project* at the end of `.devcontainer/Dockerfile`, one per line, and run **Dev Containers: Rebuild Container** (in a codespace: **Codespaces: Rebuild Container**). The rebuild takes a minute or two. Commit the changed `Dockerfile`, so that your workflow runs on every computer.
+## The `data/` Folder
 
-## Credentials
+The `data/` folder keeps the same conceptual separation used in `treat`:
 
-If you pull licensed data, for example from WRDS, never write your username and password into a script. Copy the template and add your credentials there:
+- `data/external/`: files that come from outside the repo and are kept as source material
+- `data/pulled/`: raw data written by a pull step
+- `data/generated/`: prepared datasets created from raw or external inputs
+
+In this template, the pull step uses the built-in `mtcars` dataset, so `data/external/` starts empty. The folder is still there so you can swap in your own real project data later without changing the overall structure.
+
+`data/pulled/`, `data/generated/`, and everything in `output/` except the rendered PDFs are listed in `.gitignore`, because they can be recreated by running the workflow. If you pull licensed data, for example from WRDS, keep your credentials out of your code: copy `_secrets.env` to `secrets.env`, add your credentials there, and read them in R with `readRenviron("secrets.env")`. `secrets.env` is never committed.
+
+## References
+
+The paper also includes a minimal bibliography workflow. The bibliography file lives at:
+
+- `doc/references.bib`
+
+and `doc/paper.qmd` cites at least one reference from that file. That way you can already see the basic citation pattern in a working template rather than adding it later from scratch.
+
+## Recommended Setup Paths
+
+There are three ways to work with this repo:
+
+1. **VS Code + Docker Desktop (Dev Container)**
+   This is the recommended path.
+2. **GitHub Codespaces**
+   This is the easiest path. Nothing to install.
+3. **Fully local install**
+   This is possible, but not recommended.
+
+In all three cases, first use this template on GitHub to create your own **private** repository. To work in Python, switch on **Include all branches** and set the default branch of your repository to `python`.
+
+### 1. VS Code + Docker Desktop (Dev Container)
+
+1. Install [VS Code](https://code.visualstudio.com/), [Git](https://git-scm.com/), and [Docker Desktop](https://www.docker.com/products/docker-desktop/). Start Docker Desktop and wait until it reports **Engine running**.
+2. In VS Code, install the **Dev Containers** extension (publisher Microsoft).
+3. Clone your repository: press `Ctrl+Shift+P`, run `Git: Clone`, choose **Clone from GitHub**, and select your repository.
+4. Press `Ctrl+Shift+P` and run `Dev Containers: Reopen in Container`. Confirm that you trust the folder.
+5. Wait for the container to finish building. The first build takes 10 to 20 minutes, later starts take seconds.
+6. Open a terminal with `Terminal -> New Terminal` and run:
 
 ```bash
-cp _secrets.env secrets.env
+make
 ```
 
-`secrets.env` is listed in `.gitignore` and is never committed. In R, read it with `readRenviron("secrets.env")`. If your project uses licensed data, keep your repository private.
+If you prefer RStudio, open the forwarded port `8787` in the **Ports** tab, log in with `rstudio` / `rstudio`, and open `ctar-project-template.Rproj` via `File -> Open Project`.
 
-## AI Prompts
+### 2. GitHub Codespaces
 
-- `makefile_prompt.md` helps you understand and adapt the `Makefile`.
-- `docker_devcontainer_prompt.md` helps with questions and errors around `.devcontainer/`.
+1. On your repository page, click **Code** -> **Codespaces** -> **Create codespace on main**.
+2. Wait for the container to finish building. VS Code then opens in your browser.
+3. Open a terminal with `Terminal -> New Terminal` and run:
 
-Replace the text inside the `{{ }}` blocks and paste the prompt into an LLM of your choice.
+```bash
+make
+```
+
+Codespaces are free for a limited number of hours per month. Stop your codespace when you are done: **Code** -> **Codespaces** -> **...** -> **Stop codespace**.
+
+### 3. Fully Local Install
+
+You can also run the project outside containers, but this is **not recommended** unless you are comfortable managing the stack yourself:
+
+- R
+- Quarto
+- TinyTeX or another LaTeX installation
+- the R packages listed at the end of `.devcontainer/Dockerfile`
+- GNU Make
+- Git
+
+If you choose this route, the project command is still:
+
+```bash
+make
+```
+
+## Main Project Command
+
+Run the whole project from the repository root with:
+
+```bash
+make
+```
+
+The Makefile runs the full pipeline in order:
+
+1. `code/R/pull_data.R`
+2. `code/R/prep_data.R`
+3. `code/R/run_analysis.R`
+4. `doc/paper.qmd`
+5. `doc/presentation.qmd`
+
+`make` only reruns the steps whose inputs have changed. `make clean` deletes all generated data and outputs, so that the next `make` runs everything from scratch.
+
+## Outputs
+
+The main analytical output is:
+
+- `output/results.rds`
+
+The final paper and slides are written to:
+
+- `output/paper.pdf`
+- `output/presentation.pdf`
+
+The two PDFs are committed to the repository: commit and push them after each `make` run that changes them.
+
+## The Paper
+
+The paper source lives in:
+
+- `doc/paper.qmd`
+
+It is formatted as a small article-style paper so the repository already feels like a miniature research template rather than a single script with a report attached at the end.
+The current template shows one descriptive table, one figure, and one bibliography entry so the reporting workflow stays visible without becoming crowded. The slides in `doc/presentation.qmd` read the same results bundle and show the same table and figure.
+
+## AI Prompts for Common Tasks
+
+Two ready-made prompts are included to help you work with the project configuration using an LLM assistant.
+
+- **`makefile_prompt.md`** — use this if you want to understand how the `Makefile` works or need help adapting it to your own pipeline.
+- **`docker_devcontainer_prompt.md`** — use this if you run into errors with the `.devcontainer/` setup or want to understand how the `Dockerfile` and `devcontainer.json` interact.
+
+In each file, replace the text inside the `{{ }}` blocks with your own input, then paste the whole prompt into an LLM of your choice.
+
+## Container Notes
+
+The Dev Container and Codespaces provide:
+
+- RStudio Server on port `8787`
+- `git`
+- `gh`
+- `make`
+- Quarto
+- TinyTeX
+- the R packages needed for the `mtcars` example
+
+This keeps the working environment consistent across students.
+
+When your project needs more R packages, add them to the block *R packages of the project* at the end of `.devcontainer/Dockerfile`, one per line, and run `Dev Containers: Rebuild Container` (in a codespace: `Codespaces: Rebuild Container`). The rebuild only reinstalls these packages and takes a minute or two. Commit the changed `Dockerfile`.
 
 ## Credits
 
-This template is based on [fedossa/rct-project-template](https://github.com/fedossa/rct-project-template), a reduced version of the TRR 266 template for reproducible empirical accounting research [trr266/treat](https://github.com/trr266/treat). See `LICENSE`.
+This template is based on [fedossa/rct-project-template](https://github.com/fedossa/rct-project-template), a reduced version of [trr266/treat](https://github.com/trr266/treat). See `LICENSE`.
